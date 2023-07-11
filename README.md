@@ -27,3 +27,7 @@ Maximum number of attempts to run the command until it succeeds. Defaults to `10
 ### `ignore-errors`
 
 Whether to exit successfully even if the tox command fails or not. Defaults to `false`.
+
+### `warning-on-retry`
+
+Whether to print a warning message when retrying the command. Defaults to `false`.

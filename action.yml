@@ -18,6 +18,10 @@ inputs:
     description: 'Minutes to wait before an attempt times out'
     required: false
     default: 10
+  ignore-errors:
+    description: 'Whether to exit successfully even if the tox command fails or not'
+    required: false
+    default: false
   warning-on-retry:
     description: 'Whether to print a warning message when retrying the command'
     required: false
@@ -54,5 +58,10 @@ runs:
       with:
         timeout_minutes: ${{ inputs.timeout-minutes }}
         max_attempts: ${{ inputs.max-attempts }}
+        continue_on_error: ${{ inputs.ignore-errors }}
         warning_on_retry: ${{ inputs.warning-on-retry }}
         command: tox ${{ steps.generate-tox-args.outputs.args }}
+
+    - name: Output unit tests info
+      shell: bash
+      run: echo ${{ toJSON(steps.run-unit-tests.outputs) }}
