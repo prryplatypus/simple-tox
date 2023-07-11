@@ -18,8 +18,8 @@ inputs:
     description: 'Minutes to wait before an attempt times out'
     required: false
     default: 10
-  ignore-errors:
-    description: 'Whether to exit successfully even if the tox command fails or not'
+  warning-on-retry:
+    description: 'Whether to print a warning message when retrying the command'
     required: false
     default: false
 
@@ -52,7 +52,7 @@ runs:
       id: run-unit-tests
       uses: nick-fields/retry@v2
       with:
-        continue_on_error: ${{ inputs.ignore-errors }}
         timeout_minutes: ${{ inputs.timeout-minutes }}
         max_attempts: ${{ inputs.max-attempts }}
+        warning_on_retry: ${{ inputs.warning-on-retry }}
         command: tox ${{ steps.generate-tox-args.outputs.args }}
