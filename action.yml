@@ -23,11 +23,6 @@ inputs:
     required: false
     default: false
 
-outputs:
-  exit-code:
-    description: 'The final exit code returned by the command'
-    value: ${{ steps.run-unit-tests.outputs.exit_code }}
-
 runs:
   using: "composite"
   steps:
