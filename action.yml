@@ -1,0 +1,58 @@
+name: 'Simple tox'
+description: 'A simple action to run tox like you would on your own machine'
+
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: true
+    default: '3.11'
+  tox-env:
+    description: 'Tox environment to run'
+    required: false
+    default: ''
+  max-attempts:
+    description: 'Maximum number of attempts to run the command until it succeeds'
+    required: false
+    default: 1
+  timeout-minutes:
+    description: 'Minutes to wait before an attempt times out'
+    required: false
+    default: 10
+  ignore-errors:
+    description: 'Whether to exit successfully even if the tox command fails or not'
+    required: false
+    default: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.config.python-version }}
+
+    - name: Install tox
+      shell: bash
+      run: pip install tox
+
+    - name: Generate tox arguments
+      shell: bash
+      id: generate-tox-args
+      run: |
+        env=""
+        if [[ ! -z "${{ inputs.tox-env }}" ]]; then
+          env+="-e ${{ inputs.tox-env }}"
+        fi
+        echo "args=$env" >> $GITHUB_OUTPUT
+
+    - name: Run unit tests
+      id: run-unit-tests
+      uses: nick-fields/retry@v2
+      with:
+        continue_on_error: ${{ inputs.ignore-errors }}
+        timeout_minutes: ${{ inputs.timeout-minutes }}
+        max_attempts: ${{ inputs.max-attempts }}
+        command: tox ${{ steps.generate-tox-args.outputs.args }}
