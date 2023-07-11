@@ -64,4 +64,4 @@ runs:
 
     - name: Output unit tests info
       shell: bash
-      run: echo ${{ toJSON(steps.run-unit-tests.outputs) }}
+      run: echo "${{ toJSON(steps.run-unit-tests.outputs) }}"
