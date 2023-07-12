@@ -61,7 +61,3 @@ runs:
         continue_on_error: ${{ inputs.ignore-errors }}
         warning_on_retry: ${{ inputs.warning-on-retry }}
         command: tox ${{ steps.generate-tox-args.outputs.args }}
-
-    - name: Output unit tests info
-      shell: bash
-      run: echo "${{ toJSON(steps.run-unit-tests.outputs) }}"
